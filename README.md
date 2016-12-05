@@ -9,7 +9,7 @@ Just run:
 
 Usage
 -----
-    logo-motd /path/to/image.png
+    logo-motd -o /etc/motd /path/to/image.png
 
 License
 -------

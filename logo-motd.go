@@ -6,6 +6,7 @@ import (
 	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
+	"io"
 	"log"
 	"os"
 )
@@ -28,7 +29,10 @@ var pixels = map[fourB]string{
 	fourB{false, true, true, true}:    "\u259f", // inv quadrant upper left
 	fourB{true, true, true, true}:     "\u2588"} // full block
 
+var output_file = ""
+
 func main() {
+	flag.StringVar(&output_file, "o", "", "Output file name")
 	flag.Parse()
 	args := flag.Args()
 
@@ -36,9 +40,17 @@ func main() {
 		log.Fatalf("Usage: %s FILE", os.Args[0])
 	}
 
+	var err error
+	var out io.WriteCloser = os.Stdout
 	logger := log.New(os.Stderr, "MOTD", log.Llongfile)
-	out := os.Stdout
 	exit := 0
+
+	if output_file != "" {
+		out, err = os.Create(output_file)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 
 	for _, file := range args {
 		if len(args) > 1 {
